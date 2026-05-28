@@ -38,7 +38,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copiamos los archivos compilados de Angular al directorio de Nginx
 # Angular 21 con @angular/build:application genera en dist/tienda-front/browser/
-COPY --from=builder /tienda-front/dist/tienda-front/browser /usr/share/nginx/html
+COPY --from=builder /app/dist/tienda-front/browser /usr/share/nginx/html
 
 # Puerto 80 (HTTP dentro del cluster — el SSL lo maneja el Ingress de GCP)
 EXPOSE 80
