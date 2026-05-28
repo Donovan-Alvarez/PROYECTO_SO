@@ -1,0 +1,94 @@
+# =============================================================================
+# docker-compose.yml
+# RUTA: raíz del repositorio (junto a las carpetas proyecto_so/ y tienda-front/)
+#
+# Levanta el stack completo localmente para desarrollo.
+#
+# COMANDOS:
+#   Levantar todo:           docker compose up -d
+#   Ver logs en tiempo real: docker compose logs -f
+#   Solo backend:            docker compose logs -f backend
+#   Detener todo:            docker compose down
+#   Destruir volúmenes:      docker compose down -v
+#
+# ACCESO LOCAL:
+#   Frontend: http://localhost:4200
+#   Backend:  http://localhost:8080
+#   MySQL:    localhost:3306
+# =============================================================================
+version: "3.9"
+
+services:
+  # ===========================================================================
+  # MySQL 8
+  # ===========================================================================
+  mysql:
+    image: mysql:8.0
+    container_name: proyecto_so_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: proyecto_so
+      MYSQL_USER: donovan_user
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ===========================================================================
+  # Backend Spring Boot
+  # Carpeta real: proyecto_so/
+  # ===========================================================================
+  backend:
+    build:
+      context: ./proyecto_so
+      dockerfile: Dockerfile
+    container_name: proyecto_so_backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: "dev"
+      # En local, apunta al servicio "mysql" de Docker Compose
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/proyecto_so?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
+      SPRING_DATASOURCE_USERNAME: "donovan_user"
+      SPRING_DATASOURCE_PASSWORD: "12345"
+      SERVER_PORT: "8080"
+      SERVER_SSL_ENABLED: "false"
+      TZ: "America/Guatemala"
+    ports:
+      - "8080:8080"
+
+  # ===========================================================================
+  # Frontend Angular + Nginx
+  # Carpeta real: tienda-front/
+  # ===========================================================================
+  frontend:
+    build:
+      context: ./tienda-front
+      dockerfile: Dockerfile
+    container_name: proyecto_so_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    # Nginx usa "backend" como hostname porque así se llama el servicio
+    # arriba en este docker-compose. El nginx.conf ya tiene:
+    #   proxy_pass http://backend-service:8080;
+    # Para local necesitamos sobreescribir ese hostname.
+    # Lo hacemos con una variable de entorno en nginx.conf o con extra_hosts:
+    extra_hosts:
+      - "backend-service:host-gateway"
+
+volumes:
+  mysql_data:
+    driver: local

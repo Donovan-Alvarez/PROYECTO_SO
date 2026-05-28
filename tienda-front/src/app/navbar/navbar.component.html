@@ -1,0 +1,33 @@
+<mat-toolbar color="primary" class="navbar">
+
+  <div class="app-name">
+    <a routerLink="/inicio">Tienda Grupo 2</a>
+  </div>
+
+  <span class="spacer"></span>
+
+  <button mat-fab
+          class="custom-fab"
+          [matBadge]="cantidad"
+          matBadgeColor="warn"
+          matBadgeOverlap="false"
+          [matBadgeHidden]="cantidad === 0"
+          routerLink="/carrito"
+          matTooltip="Carrito">
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+  <button mat-fab
+          class="custom-fab"
+          routerLink="/pedidos"
+          matTooltip="Pedidos">
+    <mat-icon>fact_check</mat-icon>
+  </button>
+
+  <button mat-fab
+          class="custom-fab"
+          (click)="logout()"
+          matTooltip="Cerrar sesión"
+          routerLink="/">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>

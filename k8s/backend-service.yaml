@@ -1,0 +1,31 @@
+# =============================================================================
+# k8s/backend-service.yaml
+# RUTA: k8s/backend-service.yaml
+#
+# El Service expone el Deployment dentro del cluster.
+# Tipo ClusterIP = solo accesible internamente.
+# El frontend (Nginx) se comunica con el backend usando el nombre DNS:
+#   http://backend-service:8080
+#
+# ¿Por qué no LoadBalancer para el backend?
+# Porque no queremos exponer la API directamente a Internet.
+# Todo el tráfico externo entra por el frontend (Nginx),
+# que hace proxy reverso hacia este service.
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: default
+  labels:
+    app: backend
+    project: proyecto-so
+spec:
+  type: ClusterIP
+  selector:
+    app: backend    # Conecta con los Pods del Deployment que tengan esta label
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080        # Puerto del Service dentro del cluster
+      targetPort: 8080  # Puerto del contenedor Spring Boot

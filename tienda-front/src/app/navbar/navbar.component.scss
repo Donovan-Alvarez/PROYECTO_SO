@@ -1,0 +1,42 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: #0b2d59;
+}
+
+
+.app-name a {
+  font-size: 25px;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-name {
+  margin-right: 10px;
+  font-size: 14px;
+  color: white;
+}
+
+.cart-button {
+  margin-left: 5px;
+}
+
+.custom-fab {
+  margin-right: 10px;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  height: 80px;
+}
+
+::ng-deep .custom-fab .mat-badge-content {
+  left: 0px;
+}

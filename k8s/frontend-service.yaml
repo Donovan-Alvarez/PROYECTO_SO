@@ -1,0 +1,25 @@
+# =============================================================================
+# k8s/frontend-service.yaml
+# RUTA: k8s/frontend-service.yaml
+#
+# LoadBalancer con IP estática reservada: 108.59.86.45
+# El frontend será accesible en: http://108.59.86.45
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: default
+  labels:
+    app: frontend
+    project: proyecto-so
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "108.59.86.45"
+  selector:
+    app: frontend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80

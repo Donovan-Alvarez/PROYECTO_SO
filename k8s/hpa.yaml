@@ -1,0 +1,65 @@
+# =============================================================================
+# k8s/hpa.yaml
+# RUTA: k8s/hpa.yaml
+#
+# El Horizontal Pod Autoscaler (HPA) escala automáticamente el número de Pods
+# según el uso de CPU (y opcionalmente memoria).
+#
+# CÓMO FUNCIONA:
+# - Si el CPU promedio supera el 70%, Kubernetes agrega más Pods
+# - Si el CPU baja y hay Pods ociosos, los elimina (hasta el mínimo)
+# - El HPA chequea cada 15 segundos
+#
+# REQUISITO: El Deployment DEBE tener definidos "resources.requests.cpu"
+# (ya los configuramos en los Deployments de arriba)
+# =============================================================================
+
+# HPA para el Backend
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend-deployment
+  minReplicas: 2    # Mínimo de Pods (alta disponibilidad)
+  maxReplicas: 6    # Máximo de Pods (controla costos)
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70   # Escala cuando CPU > 70%
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80   # Escala cuando memoria > 80%
+
+# HPA para el Frontend
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend-deployment
+  minReplicas: 2
+  maxReplicas: 4    # El frontend es más ligero, necesita menos réplicas
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

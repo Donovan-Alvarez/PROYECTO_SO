@@ -1,0 +1,60 @@
+# =============================================================================
+# k8s/frontend-deployment.yaml
+# RUTA: k8s/frontend-deployment.yaml
+#
+# Deployment del frontend Angular servido por Nginx.
+# Nginx sirve los archivos estáticos Y hace proxy de /api/ al backend.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: default
+  labels:
+    app: frontend
+    project: proyecto-so
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: frontend
+
+  template:
+    metadata:
+      labels:
+        app: frontend
+        project: proyecto-so
+    spec:
+      containers:
+        - name: frontend
+          # REEMPLAZA con tu ruta de Artifact Registry
+          image: us-central1-docker.pkg.dev/proyecto-so-grupo-2/proyecto-so/frontend:latest
+
+          ports:
+            - containerPort: 80
+              name: http
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3

@@ -1,0 +1,21 @@
+# =============================================================================
+# k8s/configmap.yaml
+# RUTA: k8s/configmap.yaml
+#
+# Configuración NO sensible — valores en texto plano.
+# IP estática: 108.59.86.45 (reservada en us-central1)
+# =============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proyecto-so-config
+  namespace: default
+  labels:
+    app: proyecto-so
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  SERVER_PORT: "8080"
+  SPRING_JPA_SHOW_SQL: "false"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+  TZ: "America/Guatemala"
+  FRONTEND_URL: "http://108.59.86.45"
