@@ -28,8 +28,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
-          cache-dependency-path: proyecto_so/pom.xml
+          # CORRECCIÓN: sin cache para evitar el error de pom.xml no encontrado
 
       - name: Ejecutar tests con Maven
         working-directory: ./proyecto_so
