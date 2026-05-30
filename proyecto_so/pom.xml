@@ -16,9 +16,6 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-		<!--  ================================================================  -->
-		<!--  CORE — Web, JPA, Security, Validation                            -->
-		<!--  ================================================================  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -35,17 +32,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!--  ================================================================  -->
-		<!--  MAIL                                                              -->
-		<!--  ================================================================  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-		<!--  ================================================================  -->
-		<!--  ACTUATOR — Requerido para health probes de Kubernetes             -->
-		<!--  Expone: /actuator/health/liveness y /actuator/health/readiness   -->
-		<!--  ================================================================  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -105,12 +95,6 @@
 			<artifactId>forms</artifactId>
 			<version>8.0.2</version>
 		</dependency>
-		<!--  ================================================================  -->
-		<!--  TESTING                                                           -->
-		<!--  CORRECCIÓN: Las dependencias originales no existen en Maven.     -->
-		<!--  spring-boot-starter-test incluye: JUnit 5, Mockito, AssertJ,    -->
-		<!--  MockMvc y spring-security-test.                                  -->
-		<!--  ================================================================  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -137,8 +121,6 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-			<!--  Spring Boot Maven Plugin  -->
-			<!--  classifier=exec evita conflicto entre el JAR ejecutable y el plain  -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -149,22 +131,11 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-					<!--
-                                            IMPORTANTE para Docker:
-                                            Esto hace que el JAR ejecutable se llame:
-                                              proyecto_so-0.0.1-SNAPSHOT-exec.jar
-                                            Y el JAR plain (sin dependencias) se llame:
-                                              proyecto_so-0.0.1-SNAPSHOT.jar
-                                            El Dockerfile copia el *-exec.jar
-                                         -->
 					<classifier>exec</classifier>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	<!--  ================================================================  -->
-	<!--  REPOSITORIOS — Necesarios para Spring Boot 4.x SNAPSHOT          -->
-	<!--  ================================================================  -->
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>

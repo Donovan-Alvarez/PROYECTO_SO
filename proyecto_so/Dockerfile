@@ -22,8 +22,6 @@ COPY src ./src
 
 # Compila y empaqueta
 # -DskipTests: los tests corren en CI/CD, no en el build de imagen
-# El JAR ejecutable se llamará: proyecto_so-0.0.1-SNAPSHOT-exec.jar
-# (por el <classifier>exec</classifier> del pom.xml)
 RUN mvn clean package -DskipTests -B
 
 # =============================================================================
